@@ -24,12 +24,45 @@ check_multilib() {
   fi
 }
 
+check_dkms() {
+  if is_installed dkms; then
+    echo "${GREEN}DKMS is installed.$END"
+  else
+    die 'The DKMS package is not installed.'
+  fi
+}
+
 is_installed() {
   for package in "$@"; do
     pacman -Qi "$package" &> /dev/null
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
       return 1
     fi
   done
   return 0
+}
+
+distinct() {
+  local array=("$@")
+  echo `printf "%s\n" "${array[@]}" | sort -n -u`
+}
+
+install() {
+  local packages=("$@")
+  if (( ${#packages[@]} != 0 )); then
+    sudo pacman -S ${packages[@]}
+  fi
+}
+
+install_aur() {
+  local aurs=("$@")
+  if (( ${#aurs[@]} != 0 )); then
+    for aur in ${aurs[@]}; do
+      git clone "https://aur.archlinux.org/$aur.git"
+      pushd $aur
+      makepkg -si
+      popd
+      rm -rf $aur
+    done
+  fi
 }

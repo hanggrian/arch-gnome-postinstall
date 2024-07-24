@@ -7,5 +7,5 @@ Work in progress.
 Change file permissions to make the script executable:
 
 ```sh
-chmod -R +x '$PATH_TO_SCRIPTS/arch-gnome-postinstall'
+chmod -R +x "$PATH_TO_SCRIPTS/arch-gnome-postinstall"
 ```

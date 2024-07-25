@@ -11,7 +11,7 @@ packages=()
 # 32-bit
 
 echo "${YELLOW}Is this 32-bit? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(lib32-mesa lib32-libva-mesa-driver lib32-mesa-vdpau lib32-vulkan-radeon)
@@ -24,7 +24,7 @@ fi
 # Xorg
 
 echo "${YELLOW}Is this Xorg? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   check_multilib
@@ -36,10 +36,11 @@ fi
 # Proceed
 
 echo "${GREEN}Installing...$END"
-install ${packages[@]}
 
-xdg-open 'https://wiki.archlinux.org/title/AMDGPU'
+install "${packages[@]}"
 
 echo 'Goodbye!'
 echo
+
+xdg-open 'https://wiki.archlinux.org/title/AMDGPU'
 exit 0

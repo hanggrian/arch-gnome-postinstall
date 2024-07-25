@@ -44,17 +44,16 @@ fi
 
 # Proceed
 
-packages=(`distinct ${packages[@]}`)
-commands=(`distinct ${commands[@]}`)
+packages=("${distinct ${packages[@]}}")
+commands=("${distinct ${commands[@]}}")
 
 echo "${GREEN}Verifying...$END"
-install ${packages[@]}
-for command in ${commands[@]}; do
-  ${command}
-done
 
-xdg-open 'https://wiki.archlinux.org/title/Hardware_video_acceleration'
+install "${packages[@]}"
+for command in "${commands[@]}"; do ${command}; done
 
 echo 'Goodbye!'
 echo
+
+xdg-open 'https://wiki.archlinux.org/title/Hardware_video_acceleration'
 exit 0

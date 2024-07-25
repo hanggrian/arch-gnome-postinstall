@@ -1,13 +1,14 @@
 #!/bin/bash
 
-readonly END=[0m
-readonly BOLD=[1m
-readonly UNDERLINE=[4m
-readonly RED=[91m
-readonly GREEN=[92m
-readonly YELLOW=[93m
+readonly END='[0m'
+readonly BOLD='[1m'
+readonly ITALIC='[3m'
+readonly UNDERLINE='[4m'
+readonly RED='[91m'
+readonly GREEN='[92m'
+readonly YELLOW='[93m'
 
-readonly PACMAN_CONF=/etc/pacman.conf
+readonly PACMAN_CONF='/etc/pacman.conf'
 
 die() {
   echo "$RED$*$END"
@@ -32,8 +33,18 @@ check_dkms() {
   fi
 }
 
+check_installed() {
+  local package="$1"
+  if is_installed "$package"; then
+    echo "${GREEN}$package is installed.$END"
+  else
+    die "$package is not installed."
+  fi
+}
+
 is_installed() {
-  for package in "$@"; do
+  local packages=("$@")
+  for package in "${packages[@]}"; do
     pacman -Qi "$package" &> /dev/null
     if [[ $? -ne 0 ]]; then
       return 1
@@ -42,27 +53,36 @@ is_installed() {
   return 0
 }
 
-distinct() {
-  local array=("$@")
-  echo `printf "%s\n" "${array[@]}" | sort -n -u`
-}
-
 install() {
   local packages=("$@")
   if (( ${#packages[@]} != 0 )); then
-    sudo pacman -S ${packages[@]}
+    sudo pacman -S "${packages[@]}"
   fi
 }
 
 install_aur() {
   local aurs=("$@")
   if (( ${#aurs[@]} != 0 )); then
-    for aur in ${aurs[@]}; do
+    for aur in "${aurs[@]}"; do
       git clone "https://aur.archlinux.org/$aur.git"
       pushd $aur
       makepkg -si
       popd
-      rm -rf $aur
+      rm -rf "$aur"
     done
   fi
+}
+
+enable() {
+  local services=("$@")
+  if (( ${#services[@]} != 0 )); then
+    for service in "${services[@]}"; do
+      sudo systemctl enable "$service"
+    done
+  fi
+}
+
+distinct() {
+  local array=("$@")
+  printf "%s\n" "${array[@]}" | sort -n -u
 }

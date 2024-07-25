@@ -12,7 +12,7 @@ aurs=(extension-manager)
 # AppIndicators
 
 echo "${YELLOW}Apply AppIndicators/Top bar icons? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(gnome-shell-extension-appindicator)
@@ -23,7 +23,7 @@ fi
 # Blur my Shell
 
 echo "${YELLOW}Apply Blur my Shell? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-blur-my-shell)
@@ -34,7 +34,7 @@ fi
 # Rounded Window Corners
 
 echo "${YELLOW}Apply Rounded Window Corners? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-rounded-window-corners)
@@ -45,7 +45,7 @@ fi
 # CoverflowAltTab
 
 echo "${YELLOW}Apply CoverflowAltTab? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-coverflow-alt-tab-git)
@@ -56,7 +56,7 @@ fi
 # Dash to Dock
 
 echo "${YELLOW}Apply Dash to Dock? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-dash-to-dock)
@@ -67,7 +67,7 @@ fi
 # Clipboard Indicator
 
 echo "${YELLOW}Apply Clipboard Indicator? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-clipboard-indicator)
@@ -78,7 +78,7 @@ fi
 # OpenWeather
 
 echo "${YELLOW}Apply OpenWeather? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-openweather)
@@ -89,7 +89,7 @@ fi
 # Sound Input & Output Device Chooser
 
 echo "${YELLOW}Apply Sound Input & Output Device Chooser? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   aurs+=(gnome-shell-extension-sound-output-device-chooser)
@@ -100,11 +100,12 @@ fi
 # Proceed
 
 echo "${GREEN}Installing...$END"
-install ${packages[@]}
-install_aur ${aurs[@]}
 
-xdg-open 'https://wiki.archlinux.org/title/GNOME#Extensions'
+install "${packages[@]}"
+install_aur "${aurs[@]}"
 
 echo 'Goodbye!'
 echo
+
+xdg-open 'https://wiki.archlinux.org/title/GNOME#Extensions'
 exit 0

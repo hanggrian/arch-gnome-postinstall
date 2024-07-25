@@ -12,7 +12,7 @@ aurs=()
 # 32-bit
 
 echo "${YELLOW}Is this 32-bit? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(lib32-mesa lib32-vulkan-intel)
@@ -25,7 +25,7 @@ fi
 # Xorg
 
 echo "${YELLOW}Is this Xorg? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   check_multilib
@@ -37,7 +37,7 @@ fi
 # HWA
 
 echo "${YELLOW}What is the CPU generation? (${UNDERLINE}B${END}${YELLOW}roadwell/${UNDERLINE}C${END}${YELLOW}offee Lake/${UNDERLINE}S${END}${YELLOW}kylake)$END"
-read input
+read -r input
 
 if [[ $input == 'B' ]] || [[ $input == 'b' ]]; then
   packages+=(intel-media-driver)
@@ -52,11 +52,12 @@ fi
 # Proceed
 
 echo "${GREEN}Installing...$END"
-install ${packages[@]}
-install_aur ${aurs[@]}
 
-xdg-open 'https://wiki.archlinux.org/title/Intel_graphics'
+install "${packages[@]}"
+install_aur "${aurs[@]}"
 
 echo 'Goodbye!'
 echo
+
+xdg-open 'https://wiki.archlinux.org/title/Intel_graphics'
 exit 0

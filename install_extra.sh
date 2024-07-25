@@ -11,7 +11,7 @@ packages=(gnome-extra)
 # GVfs
 
 echo "${YELLOW}Apply GVfs? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(gvfs-goa)
@@ -22,7 +22,7 @@ fi
 # fwupd
 
 echo "${YELLOW}Apply fwupd? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(fwupd)
@@ -33,7 +33,7 @@ fi
 # Adwaita-dark
 
 echo "${YELLOW}Apply Adwaita-dark? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(gnome-themes-extra)
@@ -44,7 +44,7 @@ fi
 # WebP Pixbuf Loader
 
 echo "${YELLOW}Apply WebP Pixbuf Loader? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(webp-pixbuf-loader)
@@ -55,7 +55,7 @@ fi
 # Power Profiles Daemon
 
 echo "${YELLOW}Apply Power Profiles Daemon? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(power-profiles-daemon)
@@ -66,7 +66,7 @@ fi
 # GST Plugin PipeWire
 
 echo "${YELLOW}Apply GST Plugin PipeWire? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${YELLOW}o)$END"
-read input
+read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(gst-plugin-pipewire)
@@ -77,10 +77,11 @@ fi
 # Proceed
 
 echo "${GREEN}Installing...$END"
-install ${packages[@]}
 
-xdg-open 'https://wiki.archlinux.org/title/GNOME'
+install "${packages[@]}"
 
 echo 'Goodbye!'
 echo
+
+xdg-open 'https://wiki.archlinux.org/title/GNOME'
 exit 0

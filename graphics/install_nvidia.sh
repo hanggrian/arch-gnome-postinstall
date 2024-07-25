@@ -12,7 +12,7 @@ aurs=()
 # Gen
 
 echo "${YELLOW}What is the GPU generation? (${UNDERLINE}M${END}${YELLOW}axwell/${UNDERLINE}T${END}${YELLOW}uring/${UNDERLINE}K${END}${YELLOW}epler)$END"
-read input
+read -r input
 
 if [[ $input == 'M' ]] || [[ $input == 'm' ]]; then
   check_dkms
@@ -33,11 +33,12 @@ fi
 # Proceed
 
 echo "${GREEN}Installing...$END"
-install ${packages[@]}
-install_aur ${aurs[@]}
 
-xdg-open 'https://wiki.archlinux.org/title/NVIDIA'
+install "${packages[@]}"
+install_aur "${aurs[@]}"
 
 echo 'Goodbye!'
 echo
+
+xdg-open 'https://wiki.archlinux.org/title/NVIDIA'
 exit 0

@@ -78,6 +78,9 @@ enable() {
   if (( ${#services[@]} != 0 )); then
     for service in "${services[@]}"; do
       sudo systemctl enable "$service"
+      if ! systemctl is-active --quiet "$service"; then
+          sudo systemctl start "$service"
+      fi
     done
   fi
 }

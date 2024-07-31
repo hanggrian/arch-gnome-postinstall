@@ -7,7 +7,7 @@ echo
 echo "${BOLD}Install SMB, NMB and discoveries:$END"
 
 packages=(samba)
-services=(smb)
+services=(smb.service)
 commands=()
 
 # Legacy discoveries
@@ -16,7 +16,7 @@ echo "${YELLOW}Apply NMB? (${UNDERLINE}Y${END}${YELLOW}es/${UNDERLINE}N${END}${Y
 read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
-  services+=(nmb)
+  services+=(nmb.service)
 elif [[ $input != 'N' ]] && [[ $input != 'n' ]]; then
   die 'Unknown input.'
 fi
@@ -28,7 +28,7 @@ read -r input
 
 if [[ $input == 'Y' ]] || [[ $input == 'y' ]]; then
   packages+=(avahi wsdd)
-  services+=(avahi-daemon wsdd)
+  services+=(avahi-daemon.service wsdd.service)
 elif [[ $input != 'N' ]] && [[ $input != 'n' ]]; then
   die 'Unknown input.'
 fi

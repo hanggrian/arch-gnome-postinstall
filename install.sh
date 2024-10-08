@@ -106,40 +106,45 @@ main() {
   echo
   echo "${BOLD}Categories:$END"
   echo '1. Prerequisites'
-  echo '2. GNOME components'
-  echo '3. Security measures'
-  echo '4. Hardware drivers'
-  echo '5. Device supports'
-  echo '6. Development tools'
+  echo '2. Pacman utilities'
+  echo '3. GNOME components'
+  echo '4. Security measures'
+  echo '5. Hardware drivers'
+  echo '6. Device supports'
+  echo '7. Development tools'
 
   case "$(
     get_input \
       "${YELLOW}What to install? \
 (1-6/\
 $YELLOW${UNDERLINE}Q${END}${YELLOW}uit)$END" \
-      '1' '2' '3' '4' '5' '6' 'q'
+      '1' '2' '3' '4' '5' '6' '7' 'q'
   )" in
     1)
       source "$(dirname "$0")/.prerequisite.sh"
       main
       ;;
     2)
-      source "$(dirname "$0")/.gnome.sh"
+      source "$(dirname "$0")/.pacman.sh"
       main
       ;;
     3)
-      source "$(dirname "$0")/.security.sh"
+      source "$(dirname "$0")/.gnome.sh"
       main
       ;;
     4)
-      source "$(dirname "$0")/.hardware.sh"
+      source "$(dirname "$0")/.security.sh"
       main
       ;;
     5)
-      source "$(dirname "$0")/.device.sh"
+      source "$(dirname "$0")/.hardware.sh"
       main
       ;;
     6)
+      source "$(dirname "$0")/.device.sh"
+      main
+      ;;
+    7)
       source "$(dirname "$0")/.development.sh"
       main
       ;;

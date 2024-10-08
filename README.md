@@ -5,6 +5,8 @@ environment on Arch Linux. The scripts prefer DKMS drivers over standard
 drivers when available. When presented with options of GUI applications, the
 scripts will install GTK over Qt-based applications.
 
+![Command-line interface](https://github.com/hanggrian/arch-gnome-postinstall/raw/assets/preview.png)
+
 ## Installation
 
 Change file permissions to make the script executable:

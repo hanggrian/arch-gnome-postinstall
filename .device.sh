@@ -4,7 +4,34 @@ echo
 
 packages=()
 aurs=()
+services=()
 commands=()
+
+# Fprint
+
+if [[ "$(
+  get_input \
+    "${YELLOW}Apply fingerprint devices? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+      'y' 'n'
+    )" == 'y'
+  ]]; then
+  packages+=('fprintd' 'imagemagick')
+fi
+
+# Camera
+
+if [[ "$(
+  get_input \
+    "${YELLOW}Apply camera devices? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+      'y' 'n'
+    )" == 'y'
+  ]]; then
+  packages+=('cameractrls')
+fi
 
 # Broadcom
 
@@ -19,19 +46,6 @@ ${UNDERLINE}N${END}${YELLOW}o)$END" \
   check_dkms
   packages+=('broadcom-wl-dkms')
   commands+=('sudo modprobe wl')
-fi
-
-# Fprint
-
-if [[ "$(
-  get_input \
-    "${YELLOW}Apply fingerprint devices? \
-(${UNDERLINE}Y${END}${YELLOW}es/\
-${UNDERLINE}N${END}${YELLOW}o)$END" \
-      'y' 'n'
-    )" == 'y'
-  ]]; then
-  packages+=('fprintd' 'imagemagick')
 fi
 
 # Logitech
@@ -67,10 +81,27 @@ ${UNDERLINE}N${END}${YELLOW}o)$END" \
   sudo gpasswd -a "$USER" plugdev
 fi
 
+# CoolerControl
+
+if [[ "$(
+  get_input \
+    "${YELLOW}Apply CoolerControl? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+      'y' 'n'
+    )" == 'y'
+  ]]; then
+  packages+=('lm_sensors')
+  aurs+=('coolercontrol')
+  services+=('coolercontrold')
+  commands+=('sudo sensors-detect' 'sudo systemctl restart coolercontrold')
+fi
+
 # Proceed
 
 echo "${GREEN}Installing...$END"
 
 install "${packages[@]}"
 install_aur "${aurs[@]}"
+enable "${services[@]}"
 for command in "${commands[@]}"; do ${command}; done

@@ -2,7 +2,6 @@
 
 readonly END='[0m'
 readonly BOLD='[1m'
-readonly ITALIC='[3m'
 readonly UNDERLINE='[4m'
 readonly RED='[91m'
 readonly GREEN='[92m'
@@ -63,40 +62,55 @@ check_installed() {
 }
 
 is_installed() {
-  local packages=("$@")
-  for package in "${packages[@]}"; do
-    sudo pacman -Qi "$package" &> /dev/null
-    if [[ $? -ne 0 ]]; then
-      return 1
-    fi
-  done
+  local package="$1"
+  sudo pacman -Qi "$package" &> /dev/null
+  if [[ $? -ne 0 ]]; then
+    return 1
+  fi
   return 0
+}
+
+is_not_empty() {
+  local array=("$@")
+  if (( ${#array[@]} != 0 )); then
+    return 0
+  fi
+  return 1
 }
 
 install() {
   local packages=("$@")
-  if (( ${#packages[@]} != 0 )); then
+  if is_not_empty "${packages[@]}"; then
     sudo pacman -S "${packages[@]}"
+    return 0
   fi
+  return 1
 }
 
 install_aur() {
   local aurs=("$@")
-  if (( ${#aurs[@]} != 0 )); then
+  if is_not_empty "${aurs[@]}"; then
     yay -S "${aurs[@]}"
+    return 0
   fi
+  return 1
 }
 
 enable() {
   local services=("$@")
-  if (( ${#services[@]} != 0 )); then
+  if is_not_empty "${services[@]}"; then
     for service in "${services[@]}"; do
-      systemctl enable "$service"
-      if ! systemctl is-active --quiet "$service"; then
-          systemctl start "$service"
-      fi
+      sudo systemctl enable "$service"
     done
+    return 0
   fi
+  return 1
+}
+
+quit() {
+  echo 'Goodbye!'
+  echo
+  exit 0
 }
 
 echo
@@ -104,7 +118,7 @@ echo "$UNDERLINE${BOLD}Arch GNOME Post-Install$END"
 
 main() {
   echo
-  echo "${BOLD}Categories:$END"
+  echo "${BOLD}Main:$END"
   echo '1. Prerequisites'
   echo '2. Pacman utilities'
   echo '3. GNOME components'
@@ -115,44 +129,19 @@ main() {
 
   case "$(
     get_input \
-      "${YELLOW}What to install? \
-(1-6/\
+      "${YELLOW}Select a category? \
+(1-7/\
 $YELLOW${UNDERLINE}Q${END}${YELLOW}uit)$END" \
       '1' '2' '3' '4' '5' '6' '7' 'q'
   )" in
-    1)
-      source "$(dirname "$0")/.prerequisite.sh"
-      main
-      ;;
-    2)
-      source "$(dirname "$0")/.pacman.sh"
-      main
-      ;;
-    3)
-      source "$(dirname "$0")/.gnome.sh"
-      main
-      ;;
-    4)
-      source "$(dirname "$0")/.security.sh"
-      main
-      ;;
-    5)
-      source "$(dirname "$0")/.hardware.sh"
-      main
-      ;;
-    6)
-      source "$(dirname "$0")/.device.sh"
-      main
-      ;;
-    7)
-      source "$(dirname "$0")/.development.sh"
-      main
-      ;;
-    q)
-      echo 'Goodbye!'
-      echo
-      exit 0
-      ;;
+    1) source "$(dirname "$0")/.prerequisite.sh" ;;
+    2) source "$(dirname "$0")/.pacman.sh" ;;
+    3) source "$(dirname "$0")/.gnome.sh" ;;
+    4) source "$(dirname "$0")/.security.sh" ;;
+    5) source "$(dirname "$0")/.hardware.sh" ;;
+    6) source "$(dirname "$0")/.device.sh" ;;
+    7) source "$(dirname "$0")/.development.sh" ;;
+    q) quit ;;
   esac
 }
 

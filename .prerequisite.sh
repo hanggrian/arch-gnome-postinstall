@@ -1,10 +1,10 @@
 #!/bin/bash
 
+skip_count=0
+
 echo
 
-packages=()
-
-# DKMS
+# https://wiki.archlinux.org/title/Dynamic_Kernel_Module_Support
 
 input="$(
   get_input \
@@ -15,43 +15,48 @@ ${UNDERLINE}N${END}${YELLOW}o)$END" \
     's' 'l' 'n'
 )"
 if [[ "$input" == 's' ]]; then
-  packages+=('dkms' 'linux-headers')
+  sudo pacman -S 'dkms' 'linux-headers'
 elif [[ "$input" == 'l' ]]; then
-  packages+=('dkms' 'linux-lts-headers')
+  sudo pacman -S 'dkms' 'linux-lts-headers'
+else
+  skip_count=$((skip_count + 1))
 fi
 
-# Yay
+# https://wiki.archlinux.org/title/AUR_helpers
 
-if [[ "$(
+input="$(
   get_input \
     "${YELLOW}Install Yay? \
 (${UNDERLINE}Y${END}${YELLOW}es/\
 ${UNDERLINE}N${END}${YELLOW}o)$END" \
-      'y' 'n'
-    )" == 'y'
-  ]]; then
+    'y' 'n'
+)"
+if [[ "$input" == 'y' ]]; then
   sudo pacman -S --needed git base-devel \
     && git clone https://aur.archlinux.org/yay.git \
     && cd yay \
     && makepkg -si
+else
+  skip_count=$((skip_count + 1))
 fi
 
-# Multilib
+# https://wiki.archlinux.org/title/Official_repositories
 
-if [[ "$(
+input="$(
   get_input \
-    "${YELLOW}Enable multilib? \
+    "${YELLOW}Install 32-bit repositories? \
 (${UNDERLINE}Y${END}${YELLOW}es/\
 ${UNDERLINE}N${END}${YELLOW}o)$END" \
-      'y' 'n'
-    )" == 'y'
-  ]]; then
+    'y' 'n'
+)"
+if [[ "$input" == 'y' ]]; then
   sudo sed -i '/\[multilib\]/,/Include/s/^#//' "$PACMAN_CONF"
   sudo pacman -Sy
+else
+  skip_count=$((skip_count + 1))
 fi
 
-# Proceed
-
-echo "${GREEN}Installing...$END"
-
-install "${packages[@]}"
+if [[ "$skip_count" -lt 3 ]]; then
+  echo "${GREEN}Finished.$END"
+fi
+main

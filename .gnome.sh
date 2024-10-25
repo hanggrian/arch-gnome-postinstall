@@ -1,69 +1,167 @@
 #!/bin/bash
 
-echo
+# https://wiki.archlinux.org/title/GNOME
 
-packages=()
-aurs=()
+gnome() {
+  echo
+  echo "${BOLD}GNOME:$END"
+  echo '1. Groups'
+  echo '2. Components'
+  echo '3. Extensions'
 
-# Groups
+  case "$(
+    get_input \
+      "${YELLOW}What to install? \
+(1-3/\
+$YELLOW${UNDERLINE}B${END}${YELLOW}ack/\
+$YELLOW${UNDERLINE}Q${END}${YELLOW}uit)$END" \
+      '1' '2' '3' 'b' 'q'
+  )" in
+    1)
+      packages=()
 
-input="$(
-  get_input \
-    "${YELLOW}Apply groups? \
+      input="$(
+        get_input \
+          "${YELLOW}Install package groups? \
 (${UNDERLINE}S${END}${YELLOW}tandard/\
 ${UNDERLINE}E${END}${YELLOW}xtra/\
 ${UNDERLINE}N${END}${YELLOW}o)$END" \
-    's' 'e' 'n'
-)"
-if [[ "$input" == 's' ]]; then
-  packages+=('gnome')
-elif [[ "$input" == 'e' ]]; then
-  packages+=('gnome' 'gnome-extra')
-fi
+          's' 'e' 'n'
+      )"
+      if [[ "$input" == 's' ]]; then
+        packages+=('gnome')
+      elif [[ "$input" == 'e' ]]; then
+        packages+=('gnome' 'gnome-extra')
+      fi
 
-# Components
+      if install "${packages[@]}"; then
+        echo "${GREEN}Finished.$END"
+      fi
+      gnome
+      ;;
+    2)
+      packages=()
 
-if [[ "$(
-  get_input \
-    "${YELLOW}Apply components? \
+      input="$(
+        get_input \
+          "${YELLOW}Install additional components? \
 (${UNDERLINE}Y${END}${YELLOW}es/\
 ${UNDERLINE}N${END}${YELLOW}o)$END" \
-      'y' 'n'
-    )" == 'y'
-  ]]; then
-  packages+=(
-    'fwupd'
-    'webp-pixbuf-loader'
-    'power-profiles-daemon'
-    'gst-plugin-pipewire'
-  )
-fi
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        packages+=(
+          'fwupd'
+          'webp-pixbuf-loader'
+          'power-profiles-daemon'
+          'gst-plugin-pipewire'
+        )
+      fi
 
-# Extensions
+      if install "${packages[@]}"; then
+        echo "${GREEN}Finished.$END"
+      fi
+      gnome
+      ;;
+    3)
+      aurs=()
 
-if [[ "$(
-  get_input \
-    "${YELLOW}Apply extensions? \
+      input="$(
+        get_input \
+          "${YELLOW}Install AppIndicators/Top bar icons? \
 (${UNDERLINE}Y${END}${YELLOW}es/\
 ${UNDERLINE}N${END}${YELLOW}o)$END" \
-      'y' 'n'
-    )" == 'y'
-  ]]; then
-  aurs+=(
-    'gnome-shell-extension-appindicator'
-    'gnome-shell-extension-blur-my-shell'
-    'gnome-shell-extension-rounded-window-corners'
-    'gnome-shell-extension-coverflow-alt-tab-git'
-    'gnome-shell-extension-dash-to-dock'
-    'gnome-shell-extension-clipboard-indicator'
-    'gnome-shell-extension-openweather'
-    'gnome-shell-extension-sound-output-device-chooser'
-  )
-fi
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-appindicator')
+      fi
 
-# Proceed
+      input="$(
+        get_input \
+          "${YELLOW}Install shell blur? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-blur-my-shell')
+      fi
 
-echo "${GREEN}Installing...$END"
+      input="$(
+        get_input \
+          "${YELLOW}Install rounded corners? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-rounded-window-corners')
+      fi
 
-install "${packages[@]}"
-install_aur "${aurs[@]}"
+      input="$(
+        get_input \
+          "${YELLOW}Install better Alt-Tab functionality? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-coverflow-alt-tab-git')
+      fi
+
+      input="$(
+        get_input \
+          "${YELLOW}Install Dash to Dock? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-dash-to-dock')
+      fi
+
+      input="$(
+        get_input \
+          "${YELLOW}Install clipboard history? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-clipboard-indicator')
+      fi
+
+      input="$(
+        get_input \
+          "${YELLOW}Install detailed weather? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-openweather')
+      fi
+
+      input="$(
+        get_input \
+          "${YELLOW}Install sound input/output device selector? \
+(${UNDERLINE}Y${END}${YELLOW}es/\
+${UNDERLINE}N${END}${YELLOW}o)$END" \
+          'y' 'n'
+      )"
+      if [[ "$input" == 'y' ]]; then
+        aurs+=('gnome-shell-extension-sound-output-device-chooser')
+      fi
+
+      if install_aur "${aurs[@]}"; then
+        echo "${GREEN}Finished.$END"
+      fi
+      gnome
+      ;;
+    b) main ;;
+    q) quit ;;
+  esac
+}
+
+gnome
